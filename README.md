@@ -1,8 +1,8 @@
 # Lab0 Warmup：用 AI Skill 在数据结构上实现更高层接口
 
-## 1. 实验背景与目标
+## 1. 背景与目标
 
-底层数据结构往往只暴露最基础的接口，但上层业务需要更复杂的能力。本 Lab 中，你将设计 prompt 和工具描述，让 LLM 通过多轮调用这些基础工具来完成更高层的任务。
+底层数据结构往往只暴露最基础的接口，但上层业务需要更复杂的能力。本 Lab 中，你将设计 prompt 和 function schema，让 LLM 通过多轮调用这些基础工具来完成更高层的任务。
 
 ## 2. 代码结构
 
@@ -35,7 +35,7 @@ User Prompt → LLM → tool_calls? ─Yes→ SkillRuntime 执行 → 结果追�
                         No → 返回最终答案
 ```
 
-## 4. 实验任务
+## 4. 任务
 
 你需要在两个 skill 文件中补全 **`user_prompt`**（任务提示）和 **`@registry.register`** 中的 `description` / `parameters`（工具描述与 JSON Schema）。
 
@@ -107,9 +107,9 @@ def kv_get(key: int) -> Optional[str]:
 
 > 提示：LLM 无法直接遍历 KV 存储，必须通过 prompt 引导它逐个调用 `kv_get` 来探测。
 
-## 5. 实验要求
+## 5. Lab要求
 
-### 5.1 必做
+### 5.1 代码实现
 
 - 阅读并理解 `SkillRegistry`、`SkillRuntime`、`agent_loop` 的实现。
 - 补全 `skills/graph_skills.py` 和 `skills/range_query_skills.py` 中的 TODO 部分。
@@ -117,7 +117,7 @@ def kv_get(key: int) -> Optional[str]:
 
 ### 5.2 报告
 
-在实验报告中回答以下问题（详见 `docs/report_questions.md`）：
+在 `report.md` 报告中回答以下问题（详见 `docs/report_questions.md`）：
 
 ## 6. 评分与提交
 
@@ -130,5 +130,4 @@ def kv_get(key: int) -> Optional[str]:
 
 ### 提交方式
 
-- 提交整个代码仓库及实验报告 `report.md`。
-- 运行 `./submit.sh <学号>` 生成 zip 文件并提交。
+- 运行 `./submit.sh <学号>` 生成 zip 文件提交代码及 `report.md`。
