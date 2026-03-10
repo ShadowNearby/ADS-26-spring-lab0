@@ -12,12 +12,11 @@ client = OpenAI(
     base_url=BASE_URL,
 )
 
-def agent_loop(registry: SkillRegistry, runtime: SkillRuntime, messages: list[dict]):
 
+def agent_loop(registry: SkillRegistry, runtime: SkillRuntime, messages: list[dict]):
     tools = list(registry.schemas.values())
 
     while True:
-
         response = client.chat.completions.create(
             model=MODEL,
             messages=messages,
@@ -34,15 +33,12 @@ def agent_loop(registry: SkillRegistry, runtime: SkillRuntime, messages: list[di
 
         print(tool_call)
 
-        result = runtime.run({
-            "name": tool_call.function.name,
-            "arguments": tool_call.function.arguments
-        })
+        result = runtime.run(
+            {"name": tool_call.function.name, "arguments": tool_call.function.arguments}
+        )
 
         messages.append(msg)
 
-        messages.append({
-            "role": "tool",
-            "tool_call_id": tool_call.id,
-            "content": str(result)
-        })
+        messages.append(
+            {"role": "tool", "tool_call_id": tool_call.id, "content": str(result)}
+        )

@@ -8,6 +8,7 @@ kv_user_prompt = """
 TODO: add user prompt
 """
 
+
 @registry.register(
     name="kv_get",
     description="TODO: add description",
@@ -16,8 +17,8 @@ TODO: add user prompt
         "properties": {
             # TODO: add parameters
         },
-        "required": []
-    }
+        "required": [],
+    },
 )
 def kv_get(key: int) -> Optional[str]:
     return example_kv_store.get(key)

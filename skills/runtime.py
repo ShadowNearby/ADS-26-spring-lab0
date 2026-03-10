@@ -2,13 +2,12 @@ import json
 from typing import Any
 from skills.registry import SkillRegistry
 
-class SkillRuntime:
 
+class SkillRuntime:
     def __init__(self, registry: SkillRegistry):
         self.registry = registry
 
     def run(self, tool_call: dict) -> Any:
-
         name = tool_call["name"]
         args = json.loads(tool_call["arguments"])
 

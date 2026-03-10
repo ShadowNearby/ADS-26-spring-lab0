@@ -1,7 +1,7 @@
 from typing import Callable, Dict, Any
 
-class SkillRegistry:
 
+class SkillRegistry:
     def __init__(self):
         self.skills: Dict[str, Callable[..., Any]] = {}
         self.schemas: Dict[str, dict] = {}
@@ -15,11 +15,13 @@ class SkillRegistry:
                 "function": {
                     "name": name,
                     "description": description,
-                    "parameters": parameters
-                }
+                    "parameters": parameters,
+                },
             }
 
             return func
+
         return decorator
+
 
 registry = SkillRegistry()

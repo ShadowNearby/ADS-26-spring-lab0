@@ -16,4 +16,3 @@ def test_agent_performs_kv_range_query() -> None:
 
     assert isinstance(result, str)
     assert result.split("\n")[-1].strip() == "1,3,5,7,10"
-

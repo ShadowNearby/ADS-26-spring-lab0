@@ -7,6 +7,7 @@ graph_user_prompt = """
 TODO: add user prompt
 """
 
+
 @registry.register(
     name="neighbors",
     description="TODO: add description",
@@ -15,8 +16,8 @@ TODO: add user prompt
         "properties": {
             # TODO: add parameters
         },
-        "required": []
-    }
+        "required": [],
+    },
 )
 def neighbors(node: str) -> List[str]:
     return example_graph.get(node, [])

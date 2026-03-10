@@ -16,4 +16,3 @@ def test_agent_finds_farthest_node_from_a() -> None:
 
     assert isinstance(result, str)
     assert result.split("\n")[-1].strip() == "G"
-
