@@ -42,7 +42,7 @@ User Prompt → LLM → tool_calls? ─Yes→ SkillRuntime 执行 → 结果追�
 ### 4.1 配置环境
 
 - 获取 API key 在 `https://form.sjtu.edu.cn/infoplus/form/net_ai_api_apply/start?locale=zh`
-- 在 agent/loop.py 中设置 API key: API_KEY
+- 在 `agent/loop.py` 中设置 API key: API_KEY
 - 安装依赖: `uv sync && source .venv/bin/activate`
 
 ### 4.2 图任务：找到从 A 最远的节点
