@@ -37,7 +37,7 @@ User Prompt → LLM → tool_calls? ─Yes→ SkillRuntime 执行 → 结果追�
 
 ## 4. 任务
 
-你需要在两个 skill 文件中补全 **`user_prompt`**（任务提示）和 **`@registry.register`** 中的 `description` / `parameters`（工具描述与 JSON Schema）。
+你需要在两个 skill 文件中补全 **`user_prompt`** 和 **`@registry.register`** 中的 `description` / `parameters`。
 
 ### 4.1 配置环境
 
