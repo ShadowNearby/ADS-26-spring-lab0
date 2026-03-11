@@ -9,8 +9,8 @@
 1. 补全 `agent/loader.py` 中 `load_all_skills()`；
 2. 通过 `tests/test_add.py`；
 3. 补全两个 skill 文件并通过剩余测试：
-   - `skills/graph_skill/SKILL.md`
-   - `skills/range_query_skill/SKILL.md`
+   - `skills/graph_skill/SKILL.md` -> `tests/test_graph.py`
+   - `skills/range_query_skill/SKILL.md` -> `tests/test_kv.py`
 
 ## 2. 当前仓库结构
 
@@ -118,10 +118,6 @@ pytest tests/test_kv.py
 - 报告：完成 `report.md`，回答 `docs/report_questions.md` 中问题；
 - 打包：运行 `./submit.sh <学号>`。
 
-## 6. 常见问题（Troubleshooting）
+## 6. QA
 
-- **问题：`pytest: command not found`**
-  - 解决：先激活虚拟环境后执行 `python -m pytest`。
-
-- **问题：`openai.APIConnectionError` / `403 Forbidden`**
-  - 解决：检查 `API_KEY`、网络连通性、代理配置，以及 `BASE_URL` 是否可访问。
+[LAB0 QA](https://my.feishu.cn/docx/Fx1odSUWDooZoYxL3NwcJFtJn5b?from=from_copylink)
