@@ -18,7 +18,18 @@ def load_all_skills(skills_dir: Path = Path("skills")) -> str:
         for name in ("SKILL.md", "skill.md"):
             skill_file = path / name
             if skill_file.exists():
-                # TODO: implement this
-                pass
+                text = skill_file.read_text(encoding="utf-8").strip()
+                if not text:
+                    break
+
+                body = text
+                if body.startswith("---"):
+                    end_index = body.find("\n---", 3)
+                    if end_index != -1:
+                        body = body[end_index + len("\n---") :].strip()
+
+                if body:
+                    skill_contents.append(body)
+                break
 
     return "\n\n---\n\n".join(skill_contents)

@@ -12,8 +12,8 @@ ZIP_NAME="lab0_${STUDENT_ID}.zip"
 
 # Files students must submit
 REQUIRED_FILES=(
-    skills/graph_skills.py
-    skills/range_query_skills.py
+    skills/graph_skill/SKILL.md
+    skills/range_query_skill/SKILL.md
 )
 
 # Check required files exist

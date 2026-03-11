@@ -1,133 +1,127 @@
 # Lab0 Warmup：用 AI Skill 在数据结构上实现更高层接口
 
-## 1. 背景与目标
+## 1. Lab 目标
 
-底层数据结构往往只暴露最基础的接口，但上层业务需要更复杂的能力。本 Lab 中，你将设计 prompt 和 function schema，让 LLM 通过多轮调用这些基础工具来完成更高层的任务。
+本 Lab 目标是让你理解一个最小 Agent + Tool Calling 框架，并通过补全 Skill 提示词，让 LLM 能在多轮工具调用中完成任务。
 
-## 2. 代码结构
+你需要完成 3 个部分：
 
-```
-agent/loop.py                 # Agent Loop：驱动 LLM ↔ 工具的多轮对话
-skills/registry.py            # SkillRegistry：注册工具及其 JSON Schema
-skills/runtime.py             # SkillRuntime：执行 tool_call 并返回结果
-skills/graph_skills.py        # 图工具 neighbors（需补全）
-skills/range_query_skills.py  # KV 工具 kv_get（需补全）
-examples/example_graph.py     # 示例图数据
-examples/example_kv.py        # 示例 KV 数据
-tests/test_graph.py           # 图任务测试
-tests/test_kv.py              # KV 任务测试
-main.py                       # 入口：python main.py 或 pytest
-```
+1. 补全 `agent/loader.py` 中 `load_all_skills()`；
+2. 通过 `tests/test_add.py`；
+3. 补全两个 skill 文件并通过剩余测试：
+   - `skills/graph_skill/SKILL.md`
+   - `skills/range_query_skill/SKILL.md`
 
-## 3. 框架说明
+## 2. 当前仓库结构
 
-框架由三个组件构成，建议阅读源码理解细节：
+```text
+agent/
+  loader.py      # 加载 skills/*/SKILL.md 内容并拼接成 system prompt # TODO
+  loop.py        # Agent loop：LLM 与工具多轮交互
+  registry.py    # 工具注册表与 schema
+  runtime.py     # 执行 tool_call
 
-1. **SkillRegistry** (`skills/registry.py`)：通过 `@registry.register(name, description, parameters)` 装饰器注册工具函数，同时生成 OpenAI Tools 格式的 JSON Schema。
-2. **SkillRuntime** (`skills/runtime.py`)：接收 LLM 发出的 `tool_call`，解析参数并执行对应的 Python 函数。
-3. **agent_loop** (`agent/loop.py`)：循环调用 LLM → 若返回 `tool_calls` 则执行工具并将结果追加到对话 → 若无 `tool_calls` 则返回最终文本答案。
+tools/
+  add_tool.py    # add(a, b)
+  graph_tool.py  # neighbors(node)
+  kv_get_tool.py # kv_get(key)
+  __init__.py    # 自动加载全部工具
 
-整体流程：
+skills/
+  add_skill/SKILL.md
+  graph_skill/SKILL.md          # TODO
+  range_query_skill/SKILL.md    # TODO
 
-```
-User Prompt → LLM → tool_calls? ─Yes→ SkillRuntime 执行 → 结果追加到对话 → 回到 LLM
-                        │
-                        No → 返回最终答案
-```
+examples/
+  example_graph.py
+  example_kv.py
 
-## 4. 任务
-
-你需要在两个 skill 文件中补全 **`user_prompt`** 和 **`@registry.register`** 中的 `description` / `parameters`。
-
-### 4.1 配置环境
-
-- 在 `https://form.sjtu.edu.cn/infoplus/form/net_ai_api_apply/start?locale=zh` 获取 API key
-- 在 `agent/loop.py` 中设置 API key: API_KEY
-- 安装依赖: `uv sync && source .venv/bin/activate`
-
-### 4.2 图任务：找到从 A 最远的节点
-
-**需修改文件**：`skills/graph_skills.py`
-
-底层数据（`examples/example_graph.py`）：
-
-```python
-example_graph = {
-    "A": ["B", "C"],
-    "B": ["C"],
-    "C": ["A", "B", "E"],
-    "D": ["E"],
-    "E": ["C", "D", "F"],
-    "F": ["E", "G"],
-    "G": ["F"]
-}
+tests/
+  test_add.py
+  test_graph.py
+  test_kv.py
 ```
 
-已有的工具函数：
+## 3. 环境准备
 
-```python
-def neighbors(node: str) -> List[str]:
-    return example_graph.get(node, [])
+建议使用 `uv`：
+
+```bash
+uv sync
+source .venv/bin/activate
 ```
 
-**你需要做的**：
-1. 编写 `graph_user_prompt`，引导 LLM 从 `A` 出发，通过反复调用 `neighbors` 探索图，找到距离 A 最远的节点。
-2. 补全 `@registry.register` 的 `description` 和 `parameters`。
+API 配置：
 
-**测试判定**（`tests/test_graph.py`）：取 LLM 输出最后一行，去除空白后应等于 `"G"`。
+1. 申请 API key [https://form.sjtu.edu.cn/infoplus/form/net_ai_api_apply/start?locale=zh](https://form.sjtu.edu.cn/infoplus/form/net_ai_api_apply/start?locale=zh)
+2. 在 `agent/loop.py` 中设置 `API_KEY`；
 
-### 4.3 KV 任务：范围查询
+## 4. 任务细节
 
-**需修改文件**：`skills/range_query_skills.py`
+### 任务 A：补全 `load_all_skills()`
 
-底层数据（`examples/example_kv.py`）：
+文件：`agent/loader.py`
 
-```python
-example_kv_store = ExampleKeyValueStore({
-    1: "apple",
-    3: "banana",
-    5: "cherry",
-    7: "date",
-    10: "elderberry",
-})
+函数应实现：
+
+- 扫描 `skills/*/SKILL.md`（兼容 `skill.md`）；
+- 读取文本内容；
+- 使用 `\n\n---\n\n` 拼接所有 skill 文本并返回。
+
+该步骤完成后，`add_skill` 才会进入 system prompt，被 Agent 正确利用。
+
+### 任务 B：通过 `test_add.py`
+
+测试逻辑：向 Agent 发送 `"Add 1 and 2"`，期望输出包含 `"3"`。
+
+```bash
+pytest tests/test_add.py
 ```
 
-已有的工具函数：
+### 任务 C：补全 graph skill 并通过 `test_graph.py`
 
-```python
-def kv_get(key: int) -> Optional[str]:
-    return example_kv_store.get(key)
+文件：`skills/graph_skill/SKILL.md`
+
+你需要写清楚：
+
+- 何时使用 `neighbors`；
+- 如何从 `A` 出发逐层探索；
+- 如何避免重复访问；
+- 如何输出最终答案（应包含最远节点 `G`）。
+
+运行测试：
+
+```bash
+pytest tests/test_graph.py
 ```
 
-**你需要做的**：
-1. 编写 `kv_user_prompt`，引导 LLM 逐个调用 `kv_get` 检查区间 `[1, 10]` 内每个整数 key，收集返回非空值的 key，按升序拼成逗号分隔字符串。
-2. 补全 `@registry.register` 的 `description` 和 `parameters`。
+### 任务 D：补全 range query skill 并通过 `test_kv.py`
 
-**测试判定**（`tests/test_kv.py`）：取 LLM 输出最后一行，去除空白后应等于 `"1,3,5,7,10"`。
+文件：`skills/range_query_skill/SKILL.md`
 
-> 提示：LLM 无法直接遍历 KV 存储，必须通过 prompt 引导它逐个调用 `kv_get` 来探测。
+你需要写清楚：
 
-## 5. Lab要求
+- 何时使用 `kv_get`；
+- 对区间 `[1, 10]` 的每个整数 key 逐个调用；
+- 保留返回非空值的 key；
+- 最终按升序输出逗号分隔字符串：`1,3,5,7,10`。
 
-### 5.1 代码实现
+运行测试：
 
-- 阅读并理解 `SkillRegistry`、`SkillRuntime`、`agent_loop` 的实现。
-- 补全 `skills/graph_skills.py` 和 `skills/range_query_skills.py` 中的 TODO 部分。
-- 本地运行 `pytest` 确保两个测试通过。（由于LLM的不确定性，只要LLM能正确调用工具并给出正确答案，截图提交即可）
+```bash
+pytest tests/test_kv.py
+```
 
-### 5.2 报告
+## 5. 提交要求
 
-在 `report.md` 报告中回答以下问题（详见 `docs/report_questions.md`）：
+- 代码：确保上述 3 个测试可通过（允许模型随机性，建议保留测试截图/日志）；
+- 报告：完成 `report.md`，回答 `docs/report_questions.md` 中问题；
+- 打包：运行 `./submit.sh <学号>`。
 
-## 6. 评分与提交
+## 6. 常见问题（Troubleshooting）
 
-### 评分标准
+- **问题：`pytest: command not found`**
+  - 解决：先激活虚拟环境后执行 `python -m pytest`。
 
-| 项目 | 占比 | 说明 |
-|------|------|------|
-| 通过测试 | 80% | 正确调用工具并给出正确答案 |
-| 报告 | 20% | 设计思路、问题分析与反思 |
-
-### 提交方式
-
-- 运行 `./submit.sh <学号>` 生成 zip 文件提交代码及 `report.md`。
+- **问题：`openai.APIConnectionError` / `403 Forbidden`**
+  - 解决：检查 `API_KEY`、网络连通性、代理配置，以及 `BASE_URL` 是否可访问。
