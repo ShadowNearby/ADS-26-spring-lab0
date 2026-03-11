@@ -5,12 +5,12 @@ from agent.runtime import SkillRuntime
 from agent.loop import agent_loop
 
 
-def test_agent_performs_kv_range_query() -> None:
+def test_agent_performs_add() -> None:
     runtime = SkillRuntime(registry)
 
-    messages = [{"role": "user", "content": "range query the kv store from 1 to 10"}]
+    messages = [{"role": "user", "content": "Add 1 and 2"}]
 
     result = agent_loop(registry, runtime, messages)
 
     assert isinstance(result, str)
-    assert "1,3,5,7,10" in result
+    assert "3" in result

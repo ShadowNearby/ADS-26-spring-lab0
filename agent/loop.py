@@ -1,6 +1,8 @@
 from openai import OpenAI
-from skills.registry import SkillRegistry
-from skills.runtime import SkillRuntime
+
+from agent.registry import SkillRegistry
+from agent.runtime import SkillRuntime
+from agent.loader import load_all_skills
 
 API_KEY = ""
 BASE_URL = "https://models.sjtu.edu.cn/api/v1"
@@ -14,6 +16,10 @@ client = OpenAI(
 
 
 def agent_loop(registry: SkillRegistry, runtime: SkillRuntime, messages: list[dict]):
+    all_skills = load_all_skills()
+    if all_skills:
+        messages = [{"role": "system", "content": all_skills}] + messages
+
     tools = list(registry.schemas.values())
 
     while True:
@@ -31,7 +37,7 @@ def agent_loop(registry: SkillRegistry, runtime: SkillRuntime, messages: list[di
 
         tool_call = msg.tool_calls[0]
 
-        print(tool_call)
+        print(f"Tool Call: {tool_call}")  # for debugging
 
         result = runtime.run(
             {"name": tool_call.function.name, "arguments": tool_call.function.arguments}

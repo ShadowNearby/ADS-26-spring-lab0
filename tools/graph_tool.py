@@ -1,22 +1,20 @@
 from typing import List
 
-from skills.registry import registry
+from agent.registry import registry
 from examples.example_graph import example_graph
-
-graph_user_prompt = """
-TODO: add user prompt
-"""
 
 
 @registry.register(
     name="neighbors",
-    description="TODO: add description",
+    description="Get the neighbors of a node in the graph",
     parameters={
         "type": "object",
         "properties": {
-            # TODO: add parameters
+            "node": {
+                "type": "string",
+            }
         },
-        "required": [],
+        "required": ["node"],
     },
 )
 def neighbors(node: str) -> List[str]:

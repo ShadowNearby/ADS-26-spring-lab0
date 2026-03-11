@@ -1,6 +1,6 @@
 import json
 from typing import Any
-from skills.registry import SkillRegistry
+from agent.registry import SkillRegistry
 
 
 class SkillRuntime:

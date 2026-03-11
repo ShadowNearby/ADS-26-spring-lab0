@@ -1,23 +1,20 @@
 from typing import Optional
 
-from skills.registry import registry
+from agent.registry import registry
 from examples.example_kv import example_kv_store
-
-
-kv_user_prompt = """
-TODO: add user prompt
-"""
 
 
 @registry.register(
     name="kv_get",
-    description="TODO: add description",
+    description="Get the value of a key in the KV store if it exists else return None",
     parameters={
         "type": "object",
         "properties": {
-            # TODO: add parameters
+            "key": {
+                "type": "integer",
+            }
         },
-        "required": [],
+        "required": ["key"],
     },
 )
 def kv_get(key: int) -> Optional[str]:
