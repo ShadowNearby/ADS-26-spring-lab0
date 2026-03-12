@@ -1,12 +1,21 @@
+import os
+
+from dotenv import load_dotenv
 from openai import OpenAI
 
 from agent.registry import SkillRegistry
 from agent.runtime import SkillRuntime
 from agent.loader import load_all_skills
 
-API_KEY = ""
-BASE_URL = "https://models.sjtu.edu.cn/api/v1"
-MODEL = "qwen3coder"
+load_dotenv()
+
+API_KEY = os.environ.get("API_KEY")
+
+if not API_KEY:
+    raise RuntimeError("Please set API_KEY in .env")
+
+BASE_URL = os.environ.get("BASE_URL", "https://models.sjtu.edu.cn/api/v1")
+MODEL = os.environ.get("MODEL", "qwen3coder")
 TEMPERATURE = 0
 
 client = OpenAI(

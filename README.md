@@ -40,6 +40,8 @@ tests/
   test_add.py
   test_graph.py
   test_kv.py
+
+.env.example # 环境变量示例
 ```
 
 ## 3. 环境准备
@@ -54,7 +56,7 @@ source .venv/bin/activate
 API 配置：
 
 1. 申请 API key [https://form.sjtu.edu.cn/infoplus/form/net_ai_api_apply/start?locale=zh](https://form.sjtu.edu.cn/infoplus/form/net_ai_api_apply/start?locale=zh)
-2. 在 `agent/loop.py` 中设置 `API_KEY`；
+2. 复制 `.env.example` 到 `.env`，并修改 `API_KEY` 为上一步中申请到的 API key；
 
 ## 4. 任务细节
 
